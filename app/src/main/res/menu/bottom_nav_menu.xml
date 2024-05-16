@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_advice"
+        android:icon="@drawable/baseline_newspaper_24"
+        android:title="Advice" />
+
+    <item
+        android:id="@+id/navigation_survey"
+        android:icon="@drawable/baseline_fact_check_24"
+        android:title= "Survey" />
+
+    <item
+        android:id="@+id/navigation_analysis"
+        android:icon="@drawable/baseline_data_thresholding_24"
+        android:title="Analysis" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/baseline_account_circle_24"
+        android:title="Profile" />
+
+</menu>

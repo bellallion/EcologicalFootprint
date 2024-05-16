@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_advice">
+
+    <fragment
+        android:id="@+id/navigation_advice"
+        android:name="com.example.ecologicalfootprint.AdviceFragment"
+        android:label="Advice"
+        tools:layout="@layout/fragment_advice" />
+
+    <fragment
+        android:id="@+id/navigation_survey"
+        android:name="com.example.ecologicalfootprint.SurveyFragment"
+        android:label="Survey"
+        tools:layout="@layout/fragment_survey" >
+        <action
+            android:id="@+id/action_navigation_survey_self"
+            app:destination="@id/navigation_survey" />
+        <action
+            android:id="@+id/action_navigation_survey_to_navigation_analysis"
+            app:destination="@id/navigation_analysis" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_analysis"
+        android:name="com.example.ecologicalfootprint.AnalysisFragment"
+        android:label="Analysis"
+        tools:layout="@layout/fragment_analysis" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.ecologicalfootprint.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
+    <action
+        android:id="@+id/action_profileFragment_to_signInFragment"
+        app:destination="@id/navigation_signIn" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_signIn"
+        android:name="com.example.ecologicalfootprint.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" />
+</navigation>

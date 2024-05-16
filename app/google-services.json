@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "841606245539",
+    "firebase_url": "https://ecologicalfootprint-62a5c-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "ecologicalfootprint-62a5c",
+    "storage_bucket": "ecologicalfootprint-62a5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:841606245539:android:d0d4d4de7d90d6c3266316",
+        "android_client_info": {
+          "package_name": "com.example.ecologicalfootprint"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMIiZMm6uItdRs2PYL6skh8NaP0Z3yopU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
