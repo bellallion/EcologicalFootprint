@@ -9,7 +9,7 @@ import java.util.Locale;
 public class Results implements Serializable {
     //String id;
     public String timeText, dateText;
-    public int result;
+    public double result;
     public String login;
     public Results( ){
         // Текущее время

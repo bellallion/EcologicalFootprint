@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class Person implements Serializable {
     public String id = null, login = null, email = null, password = null;
-    public int result = -1; // текущий
-    public int best_result = 0;
+    public double result = -1; // текущий
+    public double best_result = 0;
 
     public Person(){};
 

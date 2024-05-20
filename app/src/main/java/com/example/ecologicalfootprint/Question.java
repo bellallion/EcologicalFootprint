@@ -6,7 +6,7 @@ public class Question implements Serializable {
 
     String  text;
     String [] answers;
-    int[] p; //points
+    double[] p; //points
     Question []questions;
     int variants;
     Person person;
@@ -14,7 +14,7 @@ public class Question implements Serializable {
     public Question(){
         Person person = new Person();
     };
-    public Question(String text,String [] answers, int [] p, int variants, Person person){
+    public Question(String text,String [] answers, double [] p, int variants, Person person){
         this.person = person;
         this.answers = answers;
         this.p = p;

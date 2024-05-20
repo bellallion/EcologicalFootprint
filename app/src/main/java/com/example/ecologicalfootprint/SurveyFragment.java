@@ -14,22 +14,15 @@ import androidx.navigation.Navigation;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.ecologicalfootprint.databinding.FragmentSurveyBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 
 
@@ -128,7 +121,8 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.result += question.p[0];
+                        if(question.text.equals( "2. Количество человек")) {question.person.result /= question.p[0];}
+                        else question.person.result += question.p[0];
                 }
             });
         }
@@ -140,7 +134,8 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.result += question.p[1];
+                        if(question.text.equals( "2. Количество человек")) question.person.result /= question.p[1];
+                        else question.person.result += question.p[1];;
                 }
             });
         }
@@ -152,7 +147,8 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.result += question.p[2];
+                        if(question.text.equals( "2. Количество человек")) question.person.result /= question.p[2];
+                        else question.person.result += question.p[2];
                 }
             });
         }
@@ -164,7 +160,8 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.result += question.p[3];
+                        if(question.text.equals( "2. Количество человек")) question.person.result /= question.p[3];
+                        else question.person.result += question.p[3];
                 }
             });
         }
@@ -176,7 +173,8 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.result += question.p[4];
+                        if(question.text.equals( "2. Количество человек")) question.person.result /= question.p[4];
+                        else question.person.result += question.p[4];
                 }
             });
         }
@@ -188,7 +186,8 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.result += question.p[5];
+                        if(question.text.equals( "2. Количество человек")) question.person.result /= question.p[5];
+                        else question.person.result += question.p[5];;
                 }
             });
         }
@@ -200,7 +199,8 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.result += question.p[6];
+                        if(question.text.equals( "2. Количество человек")) question.person.result /= question.p[6];
+                        else question.person.result += question.p[6];
                 }
             });
         }else {
@@ -211,7 +211,8 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.result += question.p[7];
+                        if(question.text.equals( "2. Количество человек")) question.person.result /= question.p[7];
+                        else question.person.result += question.p[7];
                 }
             });
         }

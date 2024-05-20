@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,7 @@ public class AnalysisFragment extends Fragment {
     private static final String key = "res";
     private String USER_KEY = "User";
     private String RES_KEY = "Results";
-    private TextView res, profile;
+    private TextView res, profile, planet;
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private List<String> listData;
@@ -51,6 +52,7 @@ public class AnalysisFragment extends Fragment {
     private void init(View view) {
         listView = (ListView) view.findViewById(R.id.list_results);
         res = (TextView) view.findViewById(R.id.res);
+        planet = (TextView) view.findViewById(R.id.planet);
         listData = new ArrayList<>();
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listData);
         listView.setAdapter(adapter);
@@ -61,6 +63,20 @@ public class AnalysisFragment extends Fragment {
             mDatabase = FirebaseDatabase.getInstance().getReference(myAuth.getUid()).getDatabase();
             mResults = FirebaseDatabase.getInstance().getReference(RES_KEY).getDatabase();
         }
+    }
+    private String percent(double res){
+        return new DecimalFormat("#00.00").format(res);
+    }
+    private String resultString(double res){
+        return new DecimalFormat("#00.0").format(res);
+    }
+    private void get_planet(double res){
+        if(res <= 1.8) planet.setText("потребуется 1 планета,\n если бы все люди жили так же, как вы!");
+        else if(res <= 3.6) planet.setText("потребуется 2 планеты,\n если бы все люди жили так же, как вы!");
+        else if(res <= 5.4) planet.setText("потребуется 3 планеты,\n если бы все люди жили так же, как вы!");
+        else if(res <= 7.2) planet.setText("потребуется 4 планеты,\n если бы все люди жили так же, как вы!");
+        else if(res <= 9.0) planet.setText("потребуется 5 планет,\n если бы все люди жили так же, как вы!");
+        else  planet.setText("потребуется 6 планет,\n если бы все люди жили так же, как вы!");
     }
 
     private void getProfileFromDB(){
@@ -73,40 +89,30 @@ public class AnalysisFragment extends Fragment {
                 } else {
                     Person c_person = task.getResult().getValue(Person.class);
                     if (c_person != null) {
-                        person = c_person;
+                        person.login = c_person.login;
                         profile.setText(person.login);
+                        Results results = new Results();
+                        results.result = person.result;
+                        results.login = person.login;
+                        if(results.result == -1){
+                            res.setText("Вы пока не проходили тест");
+                        }else {
+                            mDatabase.getReference(USER_KEY).child(myAuth.getUid()).push().setValue(results);
+                            mResults.getReference(RES_KEY).push().setValue(results);
+                            getDataFromBetterRes();
+                        }
                     }
                 }
             }
+
+
         });
+
     }
 
-//    private void getProsentFromDB(){
-//
-//        mDatabase.getReference(RES_KEY).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Toast.makeText(getContext(), "Error getting data", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Results results = task.getResult().getValue(Results.class);
-//                    if (results != null) {
-//                        Toast.makeText(getContext(), "999", Toast.LENGTH_SHORT).show();
-//                        if(results.result > person.result)
-//                            count_better++;
-//                        count_all++;
-//                    }
-//                }
-//            }
-//        });
-//        if( count_all == 0)
-//            procent = 0;
-//        else
-//            procent = count_better /count_all*100;
-//    }
 
     // заполнение данных
-    private void bestResultChanges(int res){
+    private void bestResultChanges(double res){
         Map<String, Object> data= new HashMap<>();
         data.put("best_result", res);
         DatabaseReference reference = FirebaseDatabase.getInstance()
@@ -135,13 +141,21 @@ public class AnalysisFragment extends Fragment {
                     if(results != null ) {
                         if(results.result > person.result){
                             count_better ++;
-                            listData.add( results.login +  "   "+ results.result + "    " + results.dateText);
+
+                        }
+                        if(results.result < person.result){
+                            listData.add( results.login +  "   "+ resultString(results.result) + "    " + results.dateText);
                         }
                             count_all++;
-                        if(count_all-1 == 0) procent = 0;
-                        else procent = count_better/count_all-1;
-//                        Toast.makeText(getContext(), String.valueOf(count_all), Toast.LENGTH_SHORT).show();
-                        res.setText("Вы лучше " +  String.valueOf(procent)+ "   опросов\n" + results.dateText + "  " + results.timeText + "  " + person.result);
+                        if(count_all-1 <= 0) {
+                            procent = 0;
+                            res.setText("Ваш результат\n" + "День: " + results.dateText + "  Время:  " + results.timeText + "  Результат:  " + resultString(person.result) + "га");
+                        }
+                        else {
+                            procent = count_better/(count_all-1);
+                            res.setText("Ваш результат лучше " +  percent(procent)+ " процентов\n" + "День: " + results.dateText + "  Время:  " + results.timeText + "  Результат:  " + resultString(person.result) + "га");
+                        }
+                        get_planet(results.result);
                     }
 
 
@@ -154,6 +168,8 @@ public class AnalysisFragment extends Fragment {
 
             }
         };
+        count_all = 0;
+        count_better = 0;
         mResults.getReference(RES_KEY).addValueEventListener(valueEventListener);
     }
 
@@ -172,42 +188,22 @@ public class AnalysisFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_analysis, container, false);
 
         init(view);
-        assert (myAuth.getUid() != null);
-            getProfileFromDB();
 
-        if (person.result > person.best_result) {
+        if ((person.result < person.best_result) && (myAuth.getUid() != null)) {
             person.best_result = person.result;
             bestResultChanges(person.result);
         }
-        if (person.result == -1) {
-
-            res.setText("Вы пока не проходили тест");
-        } else{
-//            Person c_person = getLoginFromDB();
-//            if(!c_person.id.toString().equals("")) {
-                Results results = new Results();
-                results.result = person.result;
-                if (myAuth.getUid() != null) {
-//                    getProfileFromDB();
-//                    DatabaseReference reference = FirebaseDatabase.getInstance()
-//                            .getReference(myAuth.getUid())
-//                            .child("Person").child("login");
-//                    reference.g
-                    //getProsentFromDB();
-                    results.login = profile.getText().toString();
-                    Toast.makeText(getContext(), results.login, Toast.LENGTH_SHORT).show();
-                    getDataFromBetterRes();
-                    mDatabase.getReference(USER_KEY).child(myAuth.getUid()).push().setValue(results);
-                    mResults.getReference(RES_KEY).push().setValue(results);
-
-//                    res.setText("Вы лучше " + String.valueOf(procent) + "   опросов\n" + results.dateText + "  " + results.timeText + "  " + person.result);
-                } else {
-                    res.setText("Войдите в систему\n" + results.dateText + "  " + results.timeText + "  " + person.result);
-                }
-//            }else{
-//                Toast.makeText(getContext(), "wwwwwwwwwwwwww", Toast.LENGTH_SHORT).show();
-//            }
-
+        if (myAuth.getUid() != null) {
+            getProfileFromDB();
+        } else {
+            Results results = new Results();
+            results.result = person.result;
+            if(results.result == -1){
+                res.setText("Вы пока не проходили тест");
+            }else {
+                res.setText("Войдите в систему\n" + results.dateText + "  " + results.timeText + "  " + resultString(person.result)+ "га");
+                get_planet(person.result);
+            }
         }
         return view;
     }

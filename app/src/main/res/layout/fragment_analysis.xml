@@ -33,6 +33,13 @@
             android:textSize="30sp">
 
         </TextView>
+        <TextView
+            android:id="@+id/planet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp">
+
+        </TextView>
         <ListView
             android:id="@+id/list_results"
             android:layout_width="300dp"
