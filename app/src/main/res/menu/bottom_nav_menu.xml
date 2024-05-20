@@ -7,7 +7,7 @@
         android:title="Advice" />
 
     <item
-        android:id="@+id/navigation_survey"
+        android:id="@+id/firstSurveyFragment"
         android:icon="@drawable/baseline_fact_check_24"
         android:title= "Survey" />
 

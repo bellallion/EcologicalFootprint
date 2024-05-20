@@ -1,11 +1,25 @@
 package com.example.ecologicalfootprint;
 
+import android.util.Pair;
+
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Person implements Serializable {
-    int results = 0;
+    public String id = null, login = null, email = null, password = null;
+    public int result = -1; // текущий
+    public int best_result = 0;
+
     public Person(){};
 
-    // что потребуетя для авторизации
-    // имя, время и тд
+
+    public Person(String id, String login, String email, String password) {
+        this.id = id;
+        this.login = login;
+        this.email = email;
+        this.password = password;
+    }
+
 }

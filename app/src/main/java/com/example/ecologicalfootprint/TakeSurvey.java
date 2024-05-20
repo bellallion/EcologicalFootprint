@@ -5,8 +5,9 @@ import java.io.Serializable;
 public class TakeSurvey  implements Serializable {
     public Question start_question;
     public Question current_question;
-    Person person = new Person();
+    private Person person = new Person();
     public TakeSurvey(){
+        person.result = 0;
         start_question = new Question("1. Жилье",
                 new String[] {"Площадь вашего жилья позволяет держать кошку, а собаке нормальных размеров было бы тесновато",
                         "Большая, просторная квартира",

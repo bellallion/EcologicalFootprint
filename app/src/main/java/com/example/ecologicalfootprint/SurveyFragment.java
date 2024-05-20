@@ -1,11 +1,19 @@
 package com.example.ecologicalfootprint;
 
+import static android.system.Os.remove;
+import static androidx.fragment.app.FragmentManagerKt.commit;
+
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +21,53 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ecologicalfootprint.databinding.FragmentSurveyBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class SurveyFragment extends Fragment {
 
     TakeSurvey survey = new TakeSurvey();
-    Question question = survey.current_question;
+    Question  question = survey.current_question;
     private static final String key = "question";
     private static final String key2 = "res";
-    CheckBox checkbox1;
+    private CheckBox checkbox1, checkbox2, checkbox3, checkbox4, checkbox5, checkbox6, checkbox7, checkbox8;
+    private TextView tv;
+    Handler handler;
+    private String USER_KEY = "User";
+    private FirebaseDatabase mDatabase;
+    private FirebaseAuth myAuth ;
+
+    private void init(View view){
+
+        tv = (TextView) view.findViewById(R.id.tv);
+
+        checkbox1 = (CheckBox)view.findViewById(R.id.chb1);
+        checkbox2 = (CheckBox)view.findViewById(R.id.chb2);
+        checkbox3 = (CheckBox)view.findViewById(R.id.chb3);
+        checkbox4 = (CheckBox)view.findViewById(R.id.chb4);
+        checkbox5 = (CheckBox)view.findViewById(R.id.chb5);
+        checkbox6 = (CheckBox)view.findViewById(R.id.chb6);
+        checkbox7 = (CheckBox)view.findViewById(R.id.chb7);
+        checkbox8 = (CheckBox)view.findViewById(R.id.chb8);
+
+//        myAuth = FirebaseAuth.getInstance();
+//
+//        if (myAuth.getUid() != null) {
+//            mDatabase = FirebaseDatabase.getInstance().getReference(USER_KEY).getDatabase();
+//        }
+
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,23 +81,27 @@ public class SurveyFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_survey, container, false);
 
-        int n = question.answers.length;
+        init(view);
 
-        CheckBox checkbox1 = (CheckBox)view.findViewById(R.id.chb1);
-        CheckBox checkbox2 = (CheckBox)view.findViewById(R.id.chb2);
-        CheckBox checkbox3 = (CheckBox)view.findViewById(R.id.chb3);
-        CheckBox checkbox4 = (CheckBox)view.findViewById(R.id.chb4);
-        CheckBox checkbox5 = (CheckBox)view.findViewById(R.id.chb5);
-        CheckBox checkbox6 = (CheckBox)view.findViewById(R.id.chb6);
-        CheckBox checkbox7 = (CheckBox)view.findViewById(R.id.chb7);
-        CheckBox checkbox8 = (CheckBox)view.findViewById(R.id.chb8);
+        int n = question.answers.length;
 
 
 
     //-------------------------------------установка значений
 
-        TextView tv = (TextView) view.findViewById(R.id.tv);
-        tv.setText(question.text);
+        handler = new Handler(Looper.getMainLooper()) {
+            // Looper – запускает цикл обработки сообщений
+            // getMainLooper – цикл в главном потоке обработки (UI)
+            @Override
+            public void handleMessage(@NonNull Message msg){
+                super.handleMessage(msg);
+                char[] chars = (char[]) msg.obj;
+                String str = String.valueOf(chars);
+                tv.setText(str);
+            }
+        };
+        MyThread myThreads = new MyThread(question.text, handler);
+        myThreads.start();
 
         if(n >= 1)
             checkbox1.setText(question.answers[0]);
@@ -81,7 +128,7 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.results += question.p[0];
+                        question.person.result += question.p[0];
                 }
             });
         }
@@ -93,7 +140,7 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.results += question.p[1];
+                        question.person.result += question.p[1];
                 }
             });
         }
@@ -105,7 +152,7 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.results += question.p[2];
+                        question.person.result += question.p[2];
                 }
             });
         }
@@ -117,7 +164,7 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.results += question.p[3];
+                        question.person.result += question.p[3];
                 }
             });
         }
@@ -129,7 +176,7 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.results += question.p[4];
+                        question.person.result += question.p[4];
                 }
             });
         }
@@ -141,7 +188,7 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.results += question.p[5];
+                        question.person.result += question.p[5];
                 }
             });
         }
@@ -153,7 +200,7 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.results += question.p[6];
+                        question.person.result += question.p[6];
                 }
             });
         }else {
@@ -164,7 +211,7 @@ public class SurveyFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
-                        question.person.results += question.p[7];
+                        question.person.result += question.p[7];
                 }
             });
         }
@@ -177,7 +224,9 @@ public class SurveyFragment extends Fragment {
         Bundle bundle = new Bundle();
         if(question.variants == 0) {
             bundle.putSerializable(key2,  question.person);
+
             btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_navigation_survey_to_navigation_analysis, bundle));
+
         }
         else {
             bundle.putSerializable(key, question.questions[0]);
@@ -185,4 +234,5 @@ public class SurveyFragment extends Fragment {
         }
         return view;
     }
+
 }

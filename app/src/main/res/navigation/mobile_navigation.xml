@@ -9,7 +9,11 @@
         android:id="@+id/navigation_advice"
         android:name="com.example.ecologicalfootprint.AdviceFragment"
         android:label="Advice"
-        tools:layout="@layout/fragment_advice" />
+        tools:layout="@layout/fragment_advice" >
+        <action
+            android:id="@+id/action_navigation_advice_self"
+            app:destination="@id/navigation_advice" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_survey"
@@ -43,5 +47,22 @@
         android:id="@+id/navigation_signIn"
         android:name="com.example.ecologicalfootprint.SignInFragment"
         android:label="fragment_sign_in"
-        tools:layout="@layout/fragment_sign_in" />
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_navigation_signIn_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/firstSurveyFragment"
+        android:name="com.example.ecologicalfootprint.FirstSurveyFragment"
+        android:label="fragment_first_survey"
+        tools:layout="@layout/fragment_first_survey" >
+        <action
+            android:id="@+id/action_firstSurveyFragment_to_navigation_survey"
+            app:destination="@id/navigation_survey"
+            app:popUpTo='@id/mobile_navigation'
+            app:popUpToInclusive="true"/>
+
+
+    </fragment>
 </navigation>

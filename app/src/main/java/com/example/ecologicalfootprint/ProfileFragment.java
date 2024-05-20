@@ -2,63 +2,165 @@ package com.example.ecologicalfootprint;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProfileFragment extends Fragment {
+    private String USER_KEY = "User";
+    private FirebaseAuth myAuth ;
+    private Button sign;
+    private boolean is_sign_in = false;
+    private ListView listView, listViewProf;
+    private ArrayAdapter<String> adapter, adapterProf;
+    private FirebaseDatabase mDatabase;
+    private List<String> listData;
+    private List<String> listProf;
+    TextView profile, res;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private  void init(View view){
+        res = (TextView) view.findViewById(R.id.res);
+        sign = (Button) view.findViewById(R.id.sign);
+        listView = (ListView) view.findViewById(R.id.list_results);
+        listViewProf = (ListView) view.findViewById(R.id.list_profile);
+        listData = new ArrayList<>();
+        listProf = new ArrayList<>();
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listData);
+        adapterProf = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listProf);
+        listView.setAdapter(adapter);
+        listViewProf.setAdapter(adapterProf);
+        myAuth = FirebaseAuth.getInstance();
+        profile = (TextView) view.findViewById(R.id.profile);
 
-    public ProfileFragment() {
-        // Required empty public constructor
+        if (myAuth.getUid() != null) {
+            mDatabase = FirebaseDatabase.getInstance().getReference(USER_KEY).getDatabase();
+        }
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    private void getProfileFromDB(){
+
+        mDatabase.getReference(USER_KEY).child(myAuth.getUid()).child("Person").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(getContext(), "Error getting data", Toast.LENGTH_SHORT).show();
+                } else {
+                    Person person = task.getResult().getValue(Person.class);
+                    if(person != null) {
+
+                        profile.setText(person.login);
+                        if(listProf.size() > 0) listProf.clear();
+                        listProf.add( "Почта:   " + person.email);
+                        listProf.add( "Лучший результат = " + person.best_result);
+                        adapterProf.notifyDataSetChanged(); // обновить
+                    }
+                }
+            }
+        });
+    }
+
+
+    private void getResFromDB(){
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(listData.size() > 0) listData.clear();
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    Results results = ds.getValue(Results.class);  // выдает все, что есть
+                    if(results != null && results.result != -1) {
+                        listData.add( "День: " + results.dateText + "    Время:   " + results.timeText +  "     Результат:   "+ results.result);
+                    }
+                }
+                adapter.notifyDataSetChanged(); // обновить
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        mDatabase.getReference(USER_KEY).child(myAuth.getUid()).addValueEventListener(valueEventListener);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser cUser = myAuth.getCurrentUser();
+        if(cUser != null) { // пользователь вошел в аккаунт
+            is_sign_in = true;
+            sign.setText("Выйти");
+            res.setText("Ваши результаты:");
+
+            getProfileFromDB();
+//            profile.setText(mDatabase.getReference(USER_KEY).child(myAuth.getUid()).);
+        }
+        else{
+            sign.setText("Войти");
+            is_sign_in = false;
+        }
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        init(view);
+
+        sign.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(is_sign_in) {
+                    FirebaseAuth.getInstance().signOut();
+                }
+
+                Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_signInFragment);
+
+            }
+        });
+        if(myAuth.getUid() != null){
+            getResFromDB();
+        }
+
+        return view;
     }
 }
