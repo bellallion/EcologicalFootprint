@@ -27,11 +27,11 @@ public class MyThread extends Thread{
 
             try{
                 switch(ch){
-                    case ',': Thread.sleep(200); break;
-                    case '!': Thread.sleep(300); break;
-                    case '.': Thread.sleep(300); break;
-                    case '?': Thread.sleep(300); break;
-                    default:  Thread.sleep(100); break;
+                    case ',': Thread.sleep(100); break;
+                    case '!': Thread.sleep(150); break;
+                    case '.': Thread.sleep(150); break;
+                    case '?': Thread.sleep(150); break;
+                    default:  Thread.sleep(50); break;
                 }
             }catch (InterruptedException e){
                 throw new RuntimeException(e);

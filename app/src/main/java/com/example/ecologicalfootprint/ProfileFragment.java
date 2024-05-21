@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,21 +65,25 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    private String resultString(double res){
+        return new DecimalFormat("#00.0").format(res);
+    }
     private void getProfileFromDB(){
 
         mDatabase.getReference(USER_KEY).child(myAuth.getUid()).child("Person").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
-                    Toast.makeText(getContext(), "Error getting data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Ошибка получения данных", Toast.LENGTH_SHORT).show();
                 } else {
                     Person person = task.getResult().getValue(Person.class);
                     if(person != null) {
 
-                        profile.setText(person.login);
+                        profile.setText(" "+ person.login+" ");
                         if(listProf.size() > 0) listProf.clear();
                         listProf.add( "Почта:   " + person.email);
-                        listProf.add( "Лучший результат = " + person.best_result);
+                        if(person.best_result >= 0)
+                            listProf.add( "Лучший результат = " + resultString(person.best_result));
                         adapterProf.notifyDataSetChanged(); // обновить
                     }
                 }
@@ -97,7 +102,7 @@ public class ProfileFragment extends Fragment {
                 for(DataSnapshot ds: snapshot.getChildren()){
                     Results results = ds.getValue(Results.class);  // выдает все, что есть
                     if(results != null && results.result != -1) {
-                        listData.add( "День: " + results.dateText + "    Время:   " + results.timeText +  "     Результат:   "+ results.result);
+                        listData.add( "День: " + results.dateText  +  "   Результат:    "+ resultString(results.result) + " га" + "\nВремя: " + results.timeText);
                     }
                 }
                 adapter.notifyDataSetChanged(); // обновить
@@ -121,11 +126,12 @@ public class ProfileFragment extends Fragment {
             res.setText("Ваши результаты:");
 
             getProfileFromDB();
-//            profile.setText(mDatabase.getReference(USER_KEY).child(myAuth.getUid()).);
         }
         else{
             sign.setText("Войти");
             is_sign_in = false;
+            listView.setVisibility(View.INVISIBLE);
+
         }
 
     }

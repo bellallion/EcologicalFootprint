@@ -34,10 +34,7 @@ public class SurveyFragment extends Fragment {
     private static final String key2 = "res";
     private CheckBox checkbox1, checkbox2, checkbox3, checkbox4, checkbox5, checkbox6, checkbox7, checkbox8;
     private TextView tv;
-    Handler handler;
-    private String USER_KEY = "User";
-    private FirebaseDatabase mDatabase;
-    private FirebaseAuth myAuth ;
+
 
     private void init(View view){
 
@@ -52,11 +49,6 @@ public class SurveyFragment extends Fragment {
         checkbox7 = (CheckBox)view.findViewById(R.id.chb7);
         checkbox8 = (CheckBox)view.findViewById(R.id.chb8);
 
-//        myAuth = FirebaseAuth.getInstance();
-//
-//        if (myAuth.getUid() != null) {
-//            mDatabase = FirebaseDatabase.getInstance().getReference(USER_KEY).getDatabase();
-//        }
 
     }
 
@@ -82,19 +74,7 @@ public class SurveyFragment extends Fragment {
 
     //-------------------------------------установка значений
 
-        handler = new Handler(Looper.getMainLooper()) {
-            // Looper – запускает цикл обработки сообщений
-            // getMainLooper – цикл в главном потоке обработки (UI)
-            @Override
-            public void handleMessage(@NonNull Message msg){
-                super.handleMessage(msg);
-                char[] chars = (char[]) msg.obj;
-                String str = String.valueOf(chars);
-                tv.setText(str);
-            }
-        };
-        MyThread myThreads = new MyThread(question.text, handler);
-        myThreads.start();
+        tv.setText(question.text);
 
         if(n >= 1)
             checkbox1.setText(question.answers[0]);
@@ -212,6 +192,7 @@ public class SurveyFragment extends Fragment {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if (isChecked)
                         if(question.text.equals( "2. Количество человек")) question.person.result /= question.p[7];
+                        else if(question.text.equals("7. Бытовые отходы"))question.person.result *= 2;
                         else question.person.result += question.p[7];
                 }
             });

@@ -35,6 +35,7 @@ public class AnalysisFragment extends Fragment {
     private static double procent = 0.0;
     private static double count_better = 0.0;
     private static double count_all = 0.0;
+    private boolean get_result = false;
 
     private static final String key = "res";
     private String USER_KEY = "User";
@@ -71,12 +72,12 @@ public class AnalysisFragment extends Fragment {
         return new DecimalFormat("#00.0").format(res);
     }
     private void get_planet(double res){
-        if(res <= 1.8) planet.setText("потребуется 1 планета,\n если бы все люди жили так же, как вы!");
-        else if(res <= 3.6) planet.setText("потребуется 2 планеты,\n если бы все люди жили так же, как вы!");
-        else if(res <= 5.4) planet.setText("потребуется 3 планеты,\n если бы все люди жили так же, как вы!");
-        else if(res <= 7.2) planet.setText("потребуется 4 планеты,\n если бы все люди жили так же, как вы!");
-        else if(res <= 9.0) planet.setText("потребуется 5 планет,\n если бы все люди жили так же, как вы!");
-        else  planet.setText("потребуется 6 планет,\n если бы все люди жили так же, как вы!");
+        if(res <= 1.8) planet.setText("Потребовалась бы 1 планета,\nесли бы все люди жили так же, как вы!");
+        else if(res <= 3.6) planet.setText("Потребовались бы 2 планеты,\nесли бы все люди жили так же, как вы!");
+        else if(res <= 5.4) planet.setText("Потребовались бы 3 планеты,\nесли бы все люди жили так же, как вы!");
+        else if(res <= 7.2) planet.setText("Потребовались бы 4 планеты,\nесли бы все люди жили так же, как вы!");
+        else if(res <= 9.0) planet.setText("Потребовались бы 5 планет,\nесли бы все люди жили так же, как вы!");
+        else  planet.setText("Потребовались бы 6 планет,\nесли бы все люди жили так же, как вы!");
     }
 
     private void getProfileFromDB(){
@@ -85,7 +86,7 @@ public class AnalysisFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
-                    Toast.makeText(getContext(), "Error getting data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Ошибка получения данных", Toast.LENGTH_SHORT).show();
                 } else {
                     Person c_person = task.getResult().getValue(Person.class);
                     if (c_person != null) {
@@ -96,6 +97,7 @@ public class AnalysisFragment extends Fragment {
                         results.login = person.login;
                         if(results.result == -1){
                             res.setText("Вы пока не проходили тест");
+                            listView.setVisibility(View.INVISIBLE);
                         }else {
                             mDatabase.getReference(USER_KEY).child(myAuth.getUid()).push().setValue(results);
                             mResults.getReference(RES_KEY).push().setValue(results);
@@ -143,17 +145,17 @@ public class AnalysisFragment extends Fragment {
                             count_better ++;
 
                         }
-                        if(results.result < person.result){
+                        if(results.result < person.result && !results.login.equals(person.login)){
                             listData.add( results.login +  "   "+ resultString(results.result) + "    " + results.dateText);
                         }
                             count_all++;
                         if(count_all-1 <= 0) {
                             procent = 0;
-                            res.setText("Ваш результат\n" + "День: " + results.dateText + "  Время:  " + results.timeText + "  Результат:  " + resultString(person.result) + "га");
+                            res.setText("День: " + results.dateText + "  Время:  " + results.timeText + "  Результат:  " + resultString(person.result) + " га");
                         }
                         else {
-                            procent = count_better/(count_all-1);
-                            res.setText("Ваш результат лучше " +  percent(procent)+ " процентов\n" + "День: " + results.dateText + "  Время:  " + results.timeText + "  Результат:  " + resultString(person.result) + "га");
+                            procent = count_better/(count_all-1) * 100;
+                            res.setText("Ваш результат лучше " +  percent(procent)+ " % других результатов\n" + "День: " + results.dateText + "  Время:  " + results.timeText + "  Результат:  " + resultString(person.result) + " га");
                         }
                         get_planet(results.result);
                     }
@@ -177,8 +179,11 @@ public class AnalysisFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             person = (Person) getArguments().getSerializable(key);
+            if(person.result < 0) person.result = 0.1;
+            get_result = true;
         }
     }
 
@@ -188,22 +193,25 @@ public class AnalysisFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_analysis, container, false);
 
         init(view);
-
-        if ((person.result < person.best_result) && (myAuth.getUid() != null)) {
-            person.best_result = person.result;
-            bestResultChanges(person.result);
+// обновление лучшего резцльтатата
+        if  (myAuth.getUid() != null) {
+            if((person.result >= 0)&&((person.result < person.best_result)||(person.best_result == -1.0))) {
+                person.best_result = person.result;
+                bestResultChanges(person.result);
+            }
         }
         if (myAuth.getUid() != null) {
             getProfileFromDB();
         } else {
-            Results results = new Results();
-            results.result = person.result;
-            if(results.result == -1){
-                res.setText("Вы пока не проходили тест");
-            }else {
-                res.setText("Войдите в систему\n" + results.dateText + "  " + results.timeText + "  " + resultString(person.result)+ "га");
+            listView.setVisibility(View.INVISIBLE);
+            if(get_result) {
+                Results results = new Results();
+                results.result = person.result;
+                res.setText("День: " + results.dateText + "  Время:  " + results.timeText + "  Результат:  " + resultString(person.result) + " га");
                 get_planet(person.result);
             }
+
+
         }
         return view;
     }

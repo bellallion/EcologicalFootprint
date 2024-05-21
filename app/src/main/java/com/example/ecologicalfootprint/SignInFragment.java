@@ -47,11 +47,11 @@ public class SignInFragment extends Fragment {
         FirebaseUser cUser = myAuth.getCurrentUser();
         if(cUser != null) { // пользователь вошел в аккаунт
             mDatabase = FirebaseDatabase.getInstance().getReference(USER_KEY);
-            Toast.makeText(getContext(), "User exit", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Вход выполнен успешно", Toast.LENGTH_SHORT).show();
         }
-        else{
-            Toast.makeText(getContext(), "User don't exit", Toast.LENGTH_SHORT).show();
-        }
+//        else{
+//            Toast.makeText(getContext(), "Войдите/авторизуйтесь", Toast.LENGTH_SHORT).show();
+//        }
 
     }
 
@@ -91,11 +91,11 @@ public class SignInFragment extends Fragment {
                                 mDatabase.child(myAuth.getUid()).child("Person").setValue(c_person);
 
 
-                                Toast.makeText(getContext(), "User SignUp Successful", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Пользователь авторизован", Toast.LENGTH_SHORT).show();
                                 Navigation.findNavController(view).navigate(R.id.action_navigation_signIn_to_navigation_profile);
                             }
                             else{
-                                Toast.makeText(getContext(), "the password or email is incorrect", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Данные пароля или email некорректные", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -117,11 +117,11 @@ public class SignInFragment extends Fragment {
                             if(task.isSuccessful())
                             {
                                 mDatabase = FirebaseDatabase.getInstance().getReference(USER_KEY).child(myAuth.getUid());
-                                Toast.makeText(getContext(), "User SignIn Successful", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Ввод выполнен", Toast.LENGTH_SHORT).show();
                                 Navigation.findNavController(view).navigate(R.id.action_navigation_signIn_to_navigation_profile);
                             }
                             else{
-                                Toast.makeText(getContext(), "User SignIn unsuccessful", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Ошибка\nПроверьте корретность данных", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

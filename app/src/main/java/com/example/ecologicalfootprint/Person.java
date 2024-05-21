@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Person implements Serializable {
     public String id = null, login = null, email = null, password = null;
     public double result = -1; // текущий
-    public double best_result = 0;
+    public double best_result = -1;
 
     public Person(){};
 

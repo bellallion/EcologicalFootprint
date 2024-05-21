@@ -1,55 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AnalysisFragment"
-    android:id="@+id/analysis">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+    android:id="@+id/analysis"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
         <TextView
+            android:layout_marginTop="30dp"
+            android:gravity="center"
             android:id="@+id/profile"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Вы не вошли в аккаунт"
-            android:textSize="30sp">
+            android:textColor="@color/white"
+            android:background="@color/teal_200"
+            android:textSize="20sp">
 
         </TextView>
         <TextView
+            android:textColor="@color/material_dynamic_neutral20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ваш результат:"
             android:textSize="30sp">
 
         </TextView>
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="250dp"
+        android:orientation="vertical"
+        android:layout_marginBottom="10dp">
         <TextView
+            android:gravity="center_horizontal"
+            android:layout_margin="5dp"
             android:id="@+id/res"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30sp">
+            android:textSize="18sp">
 
         </TextView>
         <TextView
+            android:layout_margin="5dp"
             android:id="@+id/planet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp">
+            android:textSize="18sp">
 
         </TextView>
+    </LinearLayout>
         <ListView
             android:id="@+id/list_results"
             android:layout_width="300dp"
-            android:layout_height="400dp">
+            android:layout_height="200dp"
+            android:background="@color/material_dynamic_neutral80">
 
         </ListView>
     </LinearLayout>
 
-
-
-
-
-</RelativeLayout>

@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,7 @@ public class AdviceFragment extends Fragment {
     TextView string_advice;
     ImageView image_advice;
     Button next_advice;
+    Handler handler;
     private String STRING_KEY = "advice_string";
     private FirebaseDatabase mDatabase;
     private int randomValue_string = 1;
@@ -59,10 +62,26 @@ public class AdviceFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(getContext(), "Error getting data", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Ошибка получения данных", Toast.LENGTH_SHORT).show();
                         } else {
                             String advice_string = task.getResult().getValue(String.class);
-                            string_advice.setText(advice_string);
+
+                            handler = new Handler(Looper.getMainLooper()) {
+                                // Looper – запускает цикл обработки сообщений
+                                // getMainLooper – цикл в главном потоке обработки (UI)
+                                @Override
+                                public void handleMessage(@NonNull Message msg){
+                                    super.handleMessage(msg);
+                                    char[] chars = (char[]) msg.obj;
+                                    String str = String.valueOf(chars);
+                                    string_advice.setText(str);
+                                }
+                            };
+                            if(advice_string != null) {
+                                MyThread myThreads = new MyThread(advice_string, handler);
+                                myThreads.start();
+                            }else Toast.makeText(getContext(), "Ошибка получения данных", Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 });

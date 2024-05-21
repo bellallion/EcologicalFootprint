@@ -5,37 +5,88 @@
     android:layout_height="match_parent"
     tools:context=".SignInFragment"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center_horizontal">
 
-    <EditText
-        android:id="@+id/mail"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:hint="Электронная почта"/>
-    <EditText
-        android:id="@+id/login"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:hint="Логин"/>
+     <LinearLayout
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+         android:gravity="center"
+         android:layout_marginBottom="10dp"
+         android:layout_marginTop="30dp">
+         <ImageView
+             android:layout_margin="20dp"
+             android:layout_width="130dp"
+             android:layout_height="130dp"
+             android:src="@drawable/tourism">
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="300dp"
+         </ImageView>
+         <TextView
+             android:textColor="@color/material_dynamic_neutral20"
+             android:textSize="30sp"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="Ecological Footprint">
+
+         </TextView>
+         <TextView
+             android:gravity="center"
+             android:layout_margin="10dp"
+             android:layout_width="320dp"
+             android:layout_height="wrap_content"
+             android:text="С заботой об экологии..."
+             android:textSize="18sp">
+         </TextView>
+     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="Пароль"/>
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <EditText
+            android:layout_margin="2dp"
+            android:id="@+id/mail"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Электронная почта"/>
+        <EditText
+            android:layout_margin="2dp"
+            android:id="@+id/login"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="Логин"/>
+
+        <EditText
+            android:layout_margin="2dp"
+            android:id="@+id/password"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="Пароль"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+        <Button
+            android:layout_marginTop="10dp"
+
+            android:id="@+id/sig_up"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="зарегистрироваться" />
+
+        <Button
+            android:layout_margin="5dp"
+            android:id="@+id/sig_in"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="войти"/>
+    </LinearLayout>
 
 
-    <Button
-        android:id="@+id/sig_up"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="зарегистрироваться" />
-
-    <Button
-        android:id="@+id/sig_in"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="войти"/>
 
 </LinearLayout>

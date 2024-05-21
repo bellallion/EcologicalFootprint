@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FirstSurveyFragment"
     android:orientation="vertical"
     android:gravity="center">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="20dp">
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/left">
+
+        </ImageView>
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/right">
+
+        </ImageView>
+
+    </LinearLayout>
+    <TextView
+        android:textColor="@color/material_dynamic_neutral20"
+        android:textSize="30sp"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:text="Каков ваш\nэкологический след?">
+
+    </TextView>
+    <TextView
+        android:layout_margin="10dp"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:text="Ваш экослед измеряет ваше\nвлияние на климат.\nРассчитайте свой след и сравните его с другми. Узнайте сколько планет потребовалось, если бы все жили, как вы."
+        android:textSize="18sp">
+
+    </TextView>
     <Button
         android:id="@+id/start"
         android:text="начать"
@@ -15,4 +50,4 @@
     </Button>
 
 
-</RelativeLayout>
+</LinearLayout>

@@ -5,94 +5,119 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SurveyFragment"
-    android:id="@+id/servey">
+    android:id="@+id/servey"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="25dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
+        android:textColor="@color/material_dynamic_neutral20"
+        android:textSize="20sp"
         android:gravity="center">
 
     </TextView>
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/polosa1"
+        android:layout_width="429dp"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv"
+        android:background="@color/material_dynamic_neutral80"
+        android:gravity="center_horizontal">
+
+    </TextView>
+    <LinearLayout
+        android:id="@+id/check"
+        android:layout_width="match_parent"
+        android:layout_height="490dp"
         android:layout_centerInParent="true"
+        android:layout_below="@+id/polosa1"
         android:gravity ="left"
         android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <CheckBox
+            android:layout_margin="2dp"
             android:id="@+id/chb1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </CheckBox>
         <CheckBox
+            android:layout_margin="2dp"
             android:id="@+id/chb2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </CheckBox>
         <CheckBox
+            android:layout_margin="2dp"
             android:id="@+id/chb3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </CheckBox>
         <CheckBox
+            android:layout_margin="2dp"
             android:id="@+id/chb4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </CheckBox>
         <CheckBox
+            android:layout_margin="2dp"
             android:id="@+id/chb5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </CheckBox>
         <CheckBox
+            android:layout_margin="2dp"
             android:id="@+id/chb6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </CheckBox>
         <CheckBox
+            android:layout_margin="2dp"
             android:id="@+id/chb7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </CheckBox>
         <CheckBox
+            android:layout_margin="2dp"
             android:id="@+id/chb8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </CheckBox>
 
-        <Button
-            android:id="@+id/next"
-            android:layout_width="200dp"
-            android:layout_height="70dp"
-            android:text="next"
-            android:textSize="30sp">
-
-        </Button>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom = "true"
-        android:gravity ="center"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
+        android:layout_below="@+id/check"
+        android:gravity="center">
+        <Button
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/next"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:text="дальше"
+            android:textSize="15sp">
 
+        </Button>
     </LinearLayout>
+
 
 
 </RelativeLayout>
