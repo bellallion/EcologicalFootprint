@@ -73,11 +73,11 @@ public class AnalysisFragment extends Fragment {
     }
     private void get_planet(double res){
         if(res <= 1.8) planet.setText("Потребовалась бы 1 планета,\nесли бы все люди жили так же, как вы!");
-        else if(res <= 3.6) planet.setText("Потребовались бы 2 планеты,\nесли бы все люди жили так же, как вы!");
-        else if(res <= 5.4) planet.setText("Потребовались бы 3 планеты,\nесли бы все люди жили так же, как вы!");
-        else if(res <= 7.2) planet.setText("Потребовались бы 4 планеты,\nесли бы все люди жили так же, как вы!");
-        else if(res <= 9.0) planet.setText("Потребовались бы 5 планет,\nесли бы все люди жили так же, как вы!");
-        else  planet.setText("Потребовались бы 6 планет,\nесли бы все люди жили так же, как вы!");
+        else if(res <= 3.6) planet.setText("Потребовалось бы 2 планеты,\nесли бы все люди жили так же, как вы!");
+        else if(res <= 5.4) planet.setText("Потребовалось бы 3 планеты,\nесли бы все люди жили так же, как вы!");
+        else if(res <= 7.2) planet.setText("Потребовалось бы 4 планеты,\nесли бы все люди жили так же, как вы!");
+        else if(res <= 9.0) planet.setText("Потребовалось бы 5 планет,\nесли бы все люди жили так же, как вы!");
+        else  planet.setText("Потребовалось бы 6 планет,\nесли бы все люди жили так же, как вы!");
     }
 
     private void getProfileFromDB(){
